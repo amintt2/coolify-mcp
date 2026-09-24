@@ -48,9 +48,20 @@ export function resolveAmong<T extends Named>(
   const byDomain = candidates.filter((c) => domains(c.item.fqdn).includes(ql.replace(/\/+$/, "")));
   if (byName.length === 0 && byDomain.length === 1) return byDomain[0];
 
-  const pool = byName.length > 1 ? byName : candidates.filter(
-    (c) => (c.item.name ?? "").toLowerCase().includes(ql) || domains(c.item.fqdn).some((d) => d.includes(ql)),
-  );
+  // Coolify names git apps "<repo>:<branch>", so "mailbase" means "mailbase:main".
+  const byBase = candidates.filter((c) => (c.item.name ?? "").toLowerCase().split(":")[0] === ql);
+  if (byName.length === 0 && byBase.length === 1) return byBase[0];
+
+  // A name match beats a domain match: "mailbase" should not also pick up
+  // another app that merely serves mailbase.example.com.
+  const nameHits = candidates.filter((c) => (c.item.name ?? "").toLowerCase().includes(ql));
+  const pool = byName.length > 1
+    ? byName
+    : byBase.length > 1
+      ? byBase
+      : nameHits.length > 0
+        ? nameHits
+        : candidates.filter((c) => domains(c.item.fqdn).some((d) => d.includes(ql)));
 
   if (pool.length === 1) return pool[0];
   if (pool.length === 0) {

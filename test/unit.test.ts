@@ -73,6 +73,15 @@ describe("resolveAmong", () => {
     assert.equal(resolveAmong(items, "https://www.docs.example.com/", "application").item.uuid, "u3");
     assert.equal(resolveAmong(items, "work", "application").item.uuid, "u2");
   });
+  it("prefers a repo:branch name and name hits over domain hits", () => {
+    const apps: Array<{ kind: ResourceKind; item: Named }> = [
+      { kind: "application" as const, item: { uuid: "m1", name: "acme:main", fqdn: "https://acme.dev" } },
+      { kind: "application" as const, item: { uuid: "m2", name: "legacy:main-redirect", fqdn: "https://acme.old.dev" } },
+    ];
+    assert.equal(resolveAmong(apps, "acme", "application").item.uuid, "m1");
+    assert.equal(resolveAmong(apps, "legacy", "application").item.uuid, "m2");
+    assert.equal(resolveAmong(apps, "acme.old", "application").item.uuid, "m2");
+  });
   it("errors clearly on ambiguity and no match", () => {
     assert.throws(() => resolveAmong(items, "example.com", "application"), /ambiguous — it matches 2 applications[\s\S]*u1[\s\S]*u3[\s\S]*Pass the uuid/);
     assert.throws(() => resolveAmong(items, "nope", "application"), /No application matches "nope"[\s\S]*web-worker/);

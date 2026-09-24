@@ -1,6 +1,6 @@
 {
   "name": "coolify-mcp",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "MCP server for the Coolify v4 API: discovery, masked environment-variable management, deploys, restarts and logs for AI agents.",
   "type": "module",
   "license": "MIT",
