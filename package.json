@@ -1,0 +1,57 @@
+{
+  "name": "coolify-mcp",
+  "version": "0.1.0",
+  "description": "MCP server for the Coolify v4 API: discovery, masked environment-variable management, deploys, restarts and logs for AI agents.",
+  "type": "module",
+  "license": "MIT",
+  "author": "Tahar Amin (https://github.com/amintt2)",
+  "homepage": "https://amintt2.github.io/coolify-mcp/",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/amintt2/coolify-mcp.git"
+  },
+  "bugs": {
+    "url": "https://github.com/amintt2/coolify-mcp/issues"
+  },
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "mcp-server",
+    "coolify",
+    "self-hosted",
+    "paas",
+    "devops",
+    "deploy",
+    "environment-variables",
+    "claude",
+    "cursor",
+    "ai-agent"
+  ],
+  "bin": {
+    "coolify-mcp": "dist/index.js"
+  },
+  "main": "dist/index.js",
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE",
+    "CHANGELOG.md"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json && node -e \"require('node:fs').chmodSync('dist/index.js', 0o755)\"",
+    "prepare": "npm run build",
+    "dev": "tsc -p tsconfig.json --watch",
+    "test": "npm run build && tsc -p tsconfig.test.json && node --test .test-build/test/*.test.js"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.30.1",
+    "zod": "^4.6.5"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.2",
+    "typescript": "^7.0.2"
+  }
+}
